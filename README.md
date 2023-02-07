@@ -2,7 +2,7 @@
 
 Dockerfile for WHOI's [ifcb_classifier](https://github.com/WHOIGit/ifcb_classifier)
 
-## Usage
+## Building
 
 To build and test run
 
@@ -32,6 +32,24 @@ NN Common Args:
   --batch SIZE  Number of images per batch. Defaults is 108
   --loaders N   Number of data-loading threads. 4 per GPU is typical. Default
                 is 4
+```
+
+## Running
+
+Example backfill of IFCB 158 2021 data:
+
+```sh
+sudo docker run --rm -d --ipc=host --gpus all --name ifcbnn-158-backfill \
+	-e CUDA_VISIBLE_DEVICES='0' \
+	-v /mnt/store/data/ifcb/sccoos/CA-IFCB-158/2021/:/indata/:ro \
+	-v /mnt/store/data/assets/ifcb/models/models/ifcb-socal/:/model/:ro \
+	-v /mnt/store/data/assets/ifcb/classified-data/IFCB158/:/outdata/ \
+	ifcb-classifier neuston_net.py RUN  \
+	--outdir "/outdata/" \
+	--outfile "{BIN_YEAR}/D{BIN_DATE}/{BIN_ID}_class.h5" \
+	/indata \
+	/model/20220416_Delmar_NES_1.ptl \
+	ifcbnn-158-backfill
 ```
 
 More usage details can be found in the `ifcb_classifier` [wiki](https://github.com/WHOIGit/ifcb_classifier/wiki/neuston_net-RUN). 
