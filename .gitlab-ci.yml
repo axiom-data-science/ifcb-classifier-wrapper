@@ -1,65 +1,37 @@
 stages:
   - build
-  - push
-  - clean
 
-variables:
-  NAME: ifcb-classifier
-
-build_image:
+build_branch:
   stage: build
-  script:
-    - docker build -t $NAME:$CI_BUILD_REF_NAME .
-
-push_master:
-  stage: push
-  only:
-    - master
-  script:
-    - docker tag $NAME:$CI_BUILD_REF_NAME registry.axiom/$NAME:latest
-    - docker push registry.axiom/$NAME:latest
-
-push_branch:
-  stage: push
   only:
     - branches
   except:
     - master
   script:
-    - docker tag $NAME:$CI_BUILD_REF_NAME registry.axiom/$NAME:$CI_BUILD_REF_NAME
-    - docker push registry.axiom/$NAME:$CI_BUILD_REF_NAME
+    - docker build -t $CI_PROJECT_NAME:$CI_PIPELINE_ID .
+    - docker tag $CI_PROJECT_NAME:$CI_PIPELINE_ID registry.axiom/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
+    - docker push registry.axiom/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
+    - docker rmi --no-prune $CI_PROJECT_NAME:$CI_PIPELINE_ID
+    - docker rmi --no-prune registry.axiom/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
 
-push_tag:
-  stage: push
-  only:
-    - tags
-  script:
-    - docker tag $NAME:$CI_BUILD_REF_NAME registry.axiom/$NAME:$CI_COMMIT_TAG
-    - docker push registry.axiom/$NAME:$CI_COMMIT_TAG
-
-clean_branch:
-  allow_failure: true
-  stage: clean
-  only:
-    - branches
-  except:
-    - master
-  script:
-    - docker rmi --no-prune registry.axiom/$NAME:$CI_BUILD_REF_NAME
-
-clean_master:
-  allow_failure: true
-  stage: clean
+build_master:
+  stage: build
   only:
     - master
   script:
-    - docker rmi --no-prune registry.axiom/$NAME:latest
+    - docker build -t $CI_PROJECT_NAME:$CI_PIPELINE_ID .
+    - docker tag $CI_PROJECT_NAME:$CI_PIPELINE_ID registry.axiom/$CI_PROJECT_NAME:latest
+    - docker push registry.axiom/$CI_PROJECT_NAME:latest
+    - docker rmi --no-prune $CI_PROJECT_NAME:$CI_PIPELINE_ID
+    - docker rmi --no-prune registry.axiom/$CI_PROJECT_NAME:latest
 
-clean_tags:
-  allow_failure: true
-  stage: clean
+build_tag:
+  stage: build
   only:
     - tags
   script:
-    - docker rmi --no-prune registry.axiom/$NAME:$CI_COMMIT_TAG
-    - docker rmi --no-prune registry.axiom/$NAME:prod
+    - docker build -t $CI_PROJECT_NAME:$CI_PIPELINE_ID .
+    - docker tag $CI_PROJECT_NAME:$CI_PIPELINE_ID registry.axiom/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+    - docker push registry.axiom/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+    - docker rmi --no-prune $CI_PROJECT_NAME:$CI_PIPELINE_ID
+    - docker rmi --no-prune registry.axiom/$CI_PROJECT_NAME:$CI_COMMIT_TAG
