@@ -1,6 +1,7 @@
-FROM debian:bullseye as builder
+FROM alpine:3 as builder
 
-RUN apt-get update && apt-get install -y wget
+RUN apk --update add openssl wget
+
 RUN wget https://github.com/WHOIGit/ifcb_classifier/archive/refs/tags/v0.3.1.tar.gz && \
     tar -xvzf v0.3.1.tar.gz
 
