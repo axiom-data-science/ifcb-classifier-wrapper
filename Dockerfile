@@ -12,8 +12,8 @@ COPY --from=builder /ifcb_classifier-0.3.1/ /ifcbnn/
 RUN apt-get update && apt-get install -y git && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 USER mambauser
-COPY --chown=mambauser:mambauser environment.txt /tmp/environment.txt
-RUN micromamba install -y -n base -f /tmp/environment.txt && \
+COPY --chown=mambauser:mambauser environment.yml /tmp/environment.yml
+RUN micromamba install -y -n base -f /tmp/environment.yml && \
     micromamba clean --all --yes 
 
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
