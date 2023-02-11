@@ -16,8 +16,5 @@ COPY --chown=mambauser:mambauser environment.yml /tmp/environment.yml
 RUN micromamba install -y -n base -f /tmp/environment.yml && \
     micromamba clean --all --yes 
 
-ARG MAMBA_DOCKERFILE_ACTIVATE=1
-RUN pip install git+https://github.com/joefutrelle/pyifcb.git
-
 WORKDIR /ifcbnn/
 ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "python"] 
