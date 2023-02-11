@@ -13,6 +13,7 @@ dependencies:
   - pandas
   - numpy
   - h5py
+  - git
   - pip
   - pip:
     - git+https://github.com/joefutrelle/pyifcb.git
