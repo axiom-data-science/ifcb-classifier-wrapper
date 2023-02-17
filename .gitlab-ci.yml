@@ -1,0 +1,37 @@
+stages:
+  - build
+
+build_branch:
+  stage: build
+  only:
+    - branches
+  except:
+    - master
+  script:
+    - docker build -t $CI_PROJECT_NAME:$CI_PIPELINE_ID .
+    - docker tag $CI_PROJECT_NAME:$CI_PIPELINE_ID registry.axiom/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
+    - docker push registry.axiom/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
+    - docker rmi --no-prune $CI_PROJECT_NAME:$CI_PIPELINE_ID
+    - docker rmi --no-prune registry.axiom/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
+
+build_master:
+  stage: build
+  only:
+    - master
+  script:
+    - docker build -t $CI_PROJECT_NAME:$CI_PIPELINE_ID .
+    - docker tag $CI_PROJECT_NAME:$CI_PIPELINE_ID registry.axiom/$CI_PROJECT_NAME:latest
+    - docker push registry.axiom/$CI_PROJECT_NAME:latest
+    - docker rmi --no-prune $CI_PROJECT_NAME:$CI_PIPELINE_ID
+    - docker rmi --no-prune registry.axiom/$CI_PROJECT_NAME:latest
+
+build_tag:
+  stage: build
+  only:
+    - tags
+  script:
+    - docker build -t $CI_PROJECT_NAME:$CI_PIPELINE_ID .
+    - docker tag $CI_PROJECT_NAME:$CI_PIPELINE_ID registry.axiom/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+    - docker push registry.axiom/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+    - docker rmi --no-prune $CI_PROJECT_NAME:$CI_PIPELINE_ID
+    - docker rmi --no-prune registry.axiom/$CI_PROJECT_NAME:$CI_COMMIT_TAG
