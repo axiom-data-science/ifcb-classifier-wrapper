@@ -1,6 +1,7 @@
 FROM mambaorg/micromamba:1.2.0
 
 USER root
+COPY --chown=root:root entrypoint.sh /entrypoint.sh
 RUN apt-get update && apt-get install -y git && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN git clone --single-branch --branch main https://github.com/WHOIGit/ifcb_classifier.git /ifcbnn
 
@@ -13,4 +14,4 @@ ARG MAMBA_DOCKERFILE_ACTIVATE=1
 RUN pip install git+https://github.com/joefutrelle/pyifcb.git
 
 WORKDIR /ifcbnn/
-ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "python"] 
+ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/entrypoint.sh"]
