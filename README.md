@@ -40,7 +40,7 @@ Example backfill of IFCB 158 2021 data:
 
 ```sh
 sudo docker run --rm -d --ipc=host --gpus all --name ifcbnn-158-backfill \
-    -e STARTDATE='2021-01-01' \
+	-e STARTDATE='2021-01-01' \
 	-e ENDDATE='2021-01-31' \
 	-e CUDA_VISIBLE_DEVICES='0' \
 	-v /mnt/store/data/ifcb/sccoos/CA-IFCB-158/2021/:/indata/:ro \
