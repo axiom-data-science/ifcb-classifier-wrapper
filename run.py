@@ -96,5 +96,26 @@ def cli(
         os.remove(filter_file)
 
 
+def cli_wrapper():
+    # detect --config-dir argument before parsing args, and batch discovered config files if found
+    config_dir = None
+    for i, arg in enumerate(sys.argv):
+        if arg == '--config-dir' and len(sys.argv) > i+1:
+            config_dir = Path(sys.argv[i+1])
+            del sys.argv[i:i+2]
+            break
+
+    if config_dir:
+        if not config_dir.exists():
+            raise ValueError(f'config-dir {config_dir} not found')
+
+        orig_args = sys.argv
+        for config_yml in sorted(config_dir.rglob('*.yml')):
+            sys.argv = orig_args + ['--config', config_yml]
+            cli(standalone_mode=False)
+    else:
+        cli()
+
+
 if __name__ == '__main__':
-    cli()
+    cli_wrapper()
