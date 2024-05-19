@@ -93,7 +93,7 @@ def cli(
 
     # clean up filter file if present
     if filter_file and os.path.exists(filter_file.name):
-        os.remove(filter_file)
+        os.remove(filter_file.name)
 
 
 def cli_wrapper():
