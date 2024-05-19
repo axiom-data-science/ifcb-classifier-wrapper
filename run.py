@@ -40,6 +40,9 @@ def cli(
     output_dir: Path,
     ifcb_classify_model_path: Path,
 ):
+    if config:
+        print(f'Running config {config}')
+
     if not run_id:
         run_id = f'{ifcb_data_dir.name.split("/")[-1]}-{int(datetime.now().timestamp())}'
 
