@@ -14,6 +14,7 @@ RUN pip install git+https://github.com/joefutrelle/pyifcb.git@d00f6aa
 WORKDIR /ifcbnn/
 ARG ifcb_classifier_cache_bust=1
 RUN git clone --single-branch --branch main https://github.com/WHOIGit/ifcb_classifier.git .
+RUN git checkout 3b7f7de210438e1f3a7b451ed51ad6374099e8e9 #2023-06-24
 COPY ./patches /tmp/patches
 RUN git apply /tmp/patches/*.patch
 

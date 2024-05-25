@@ -1,13 +1,20 @@
 diff --git a/neuston_net.py b/neuston_net.py
-index be1e81a..c270e2b 100755
+index be1e81a..feb3576 100755
 --- a/neuston_net.py
 +++ b/neuston_net.py
-@@ -250,12 +250,14 @@ def do_run(args):
+@@ -250,12 +250,20 @@ def do_run(args):
                      print('{} result-file(s) already exist - skipping this bin'.format(bin_obj))
                      continue
  
+-            bin_dataset = IfcbBinDataset(bin_fileset, classifier.hparams.resize, classifier.hparams.img_norm)
 +            print(f'Processing {bin_obj}')
-             bin_dataset = IfcbBinDataset(bin_fileset, classifier.hparams.resize, classifier.hparams.img_norm)
++            try:
++                bin_dataset = IfcbBinDataset(bin_fileset, classifier.hparams.resize, classifier.hparams.img_norm)
++            except Exception as e:
++                print(f'Error loading bin {bin_obj}: {e}')
++                error_bins.append((bin_obj, e))
++                continue
++
              image_loader = DataLoader(bin_dataset, batch_size=args.batch_size,
                                        pin_memory=True, num_workers=args.loaders)
  
@@ -17,7 +24,7 @@ index be1e81a..c270e2b 100755
                  error_bins.append((bin_obj, AssertionError('Bin is Empty')))
                  continue
              if args.gobig:
-@@ -265,6 +267,7 @@ def do_run(args):
+@@ -265,6 +273,7 @@ def do_run(args):
                  # Do runs one bin at a time
                  try: trainer.test(classifier, test_dataloaders=image_loader)
                  except Exception as e:
