@@ -1,4 +1,4 @@
-# ifcb-classifier
+# ifcb-classifier-wrapper
 
 Dockerfile for WHOI's [ifcb_classifier](https://github.com/WHOIGit/ifcb_classifier),
 with wrapper to facilitate bulk classification.
@@ -8,8 +8,8 @@ with wrapper to facilitate bulk classification.
 To build and test run
 
 ```sh
-docker build -t ifcb-classifier .
-docker run --rm ifcb-classifier neuston_net.py --help
+docker build -t ifcb-classifier-wrapper .
+docker run --rm ifcb-classifier-wrapper --help
 ```
 
 which should produce
